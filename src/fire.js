@@ -1,22 +1,28 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection } from "firebase/firestore";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAfi07e20wGSRaUGjEXJYSL3kE853kdG6k",
-  authDomain: "recipe-cost-c1ee2.firebaseapp.com",
-  projectId: "recipe-cost-c1ee2",
-  storageBucket: "recipe-cost-c1ee2.appspot.com",
-  messagingSenderId: "808257732418",
-  appId: "1:808257732418:web:adc4be7977ee4643d412db"
+  apiKey: process.env.REACT_APP_FIREBASE_APIKEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
-
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
+const auth = getAuth();
+const provider = new GoogleAuthProvider();
+const googleSignInPopup = () => signInWithPopup(auth, provider);
 
 const itemsRef = collection(db, "items");
 
 export {
   db,
+  auth,
+  googleSignInPopup,
   itemsRef,
 }

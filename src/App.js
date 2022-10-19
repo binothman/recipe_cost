@@ -1,23 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import { Login } from 'pages';
+import AuthPages from 'routers/AuthPages';
+
+import { auth } from 'fire';
+
+import { useItems } from 'hooks';
 
 function App() {
+  const { items } = useItems();
+  const initUser = JSON.parse(localStorage.getItem('user'))
+
+  console.log('items', items)
+  const [user, setUser] = React.useState(initUser ? initUser : null);
+
+  React.useEffect(() => {
+    auth.onAuthStateChanged(usr => {
+      setUser(usr);
+      localStorage.setItem('user', JSON.stringify(usr));
+    })
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route path="xyz" element={<div>xyz</div>} />
+        <Route path="*" index element={user ? <AuthPages /> : <Login />} />
+      </Routes>
     </div>
   );
 }
